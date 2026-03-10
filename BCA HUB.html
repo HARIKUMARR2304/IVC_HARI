@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCA Study Hub - Elite Video Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #3b82f6;
+            --accent: #f59e0b;
+            --liquid-gradient: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f1f5f9;
+            --shadow: 0 20px 50px rgba(0,0,0,0.5);
+            --glow: 0 0 20px rgba(99, 102, 241, 0.6);
+        }
+
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text-main); transition: 0.5s; overflow-x: hidden; }
+
+        @keyframes morphing {
+            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+            50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+            100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+        }
+
+        header { 
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        nav a { 
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        body.night {
+            --bg: #000;
+            --card-bg: #111;
+            --text-main: #0f0;
+            --secondary: #0f0;
+            --accent: #0f0;
+        }
+
+        .bookmark-star {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            color: var(--accent);
+            cursor: pointer;
+            user-select: none;
+            transition: 0.2s;
+            z-index: 10;
+        }
+        .bookmark-star:hover { transform: scale(1.2); }
+
+        #nightToggle {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+
+        nav a:hover { color: var(--accent); text-shadow: var(--glow); }
+
+        /* live classes section styles */
+        .live-header { text-align:center; padding:50px 20px; }
+        .live-schedule { max-width:800px; margin:0 auto 60px; border-collapse:collapse; width:100%; }
+        .live-schedule th, .live-schedule td { padding:12px 15px; border:1px solid rgba(255,255,255,0.1); }
+        .live-schedule th { background: rgba(59,130,246,0.2); }
+
+        .recorded-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(320px,1fr)); gap:30px; padding:20px; }
+        .recorded-card { background: var(--card-bg); border-radius:20px; overflow:hidden; box-shadow:var(--shadow); opacity:0; transform: translateY(20px); transition: 0.6s ease-out; }
+        .recorded-card.visible { opacity:1; transform: translateY(0); }
+        .recorded-card img { width:100%; height:180px; object-fit:cover; }
+        .recorded-info { padding:20px; }
+        .recorded-info h4 { margin:0 0 10px; color:var(--secondary); }
+
+        .hero { 
+            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 { font-size: 4em; margin: 0; background: var(--liquid-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
+
+        .video-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); 
+            gap: 40px; 
+            padding: 50px; 
+        }
+
+        .video-card { 
+            background: var(--card-bg);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+        }
+
+        .video-card:hover { 
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: var(--glow);
+            border-color: var(--secondary);
+        }
+
+        .thumbnail-area {
+            height: 200px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&q=80&w=600');
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .play-btn-circle {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5em;
+            box-shadow: 0 0 30px rgba(255,255,255,0.4);
+            transition: 0.3s;
+        }
+
+        .video-card:hover .play-btn-circle { transform: scale(1.2); background: var(--accent); color: white; }
+
+        .video-info { padding: 25px; }
+
+        .module-chip-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+        .module-chip {
+            background: rgba(255,255,255,0.05);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .module-chip.has-note { background: var(--accent); color: var(--primary); font-weight: bold; }
+
+        .launch-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--liquid-gradient);
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 700;
+            margin-top: 20px;
+            border-radius: 12px;
+            animation: morphing 10s infinite alternate;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* --- NOTES SECTION ENHANCEMENTS --- */
+        .notes-workspace {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .note-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            transition: 0.3s;
+        }
+
+        .note-card:focus-within {
+            border-color: var(--secondary);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: var(--glow);
+        }
+
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .note-editor {
+            width: 100%;
+            min-height: 100px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #cbd5e1;
+            padding: 15px;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            resize: vertical;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .save-status {
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .subject-divider {
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
+            margin: 40px 0 20px 0;
+            color: var(--secondary);
+        }
+
+        .grade-calc-container { max-width: 900px; margin: 50px auto; background: var(--card-bg); padding: 40px; border-radius: 30px; }
+
+        .calc-row { 
+            display: grid; 
+            grid-template-columns: 2fr 1fr 1fr; 
+            gap: 15px; 
+            margin-bottom: 15px; 
+            background: rgba(255,255,255,0.03); 
+            padding: 15px; 
+            border-radius: 15px;
+        }
+
+        select, input { background: #0f172a; border: 1px solid #334155; color: white; padding: 10px; border-radius: 8px; }
+
+        /* Login & Profile Styles */
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9em;
+            background: rgba(255,255,255,0.05);
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+        }
+
+        .profile-section:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--secondary);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-box {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 60px 50px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            animation: slideInScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .login-box h1 {
+            text-align: center;
+            background: var(--liquid-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            animation: fadeInUp 0.8s ease-out;
+            animation-delay: 0.1s;
+            animation-fill-mode: both;
+        }
+
+        .form-group:nth-child(3) { animation-delay: 0.2s; }
+        .form-group:nth-child(4) { animation-delay: 0.3s; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.02);
+            color: white;
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            transition: 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: var(--glow);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--liquid-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: 0.3s;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--glow);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        #content {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div id="profileDisplay" class="profile-section" onclick="showPage('profile')" style="cursor:pointer; display:none;">
+        <div class="profile-avatar" id="avatarInitial">U</div>
+        <div id="profileName">User</div>
+    </div>
+    <div id="headerTitle" style="flex-grow:1; text-align:center;">
+        <h1>🎓 ELITE <span style="color: var(--secondary);">VIDEO</span> LABS</h1>
+    </div>
+    <nav>
+        <a onclick="showPage('home')" id="navHome" style="display:none;">Home</a>
+        <a onclick="showPage('videoHub')" id="navVideoHub" style="display:none;">Masterclass</a>
+        <a onclick="showPage('liveClasses')" id="navLive" style="display:none;">Live Classes</a>
+        <a onclick="showPage('calculator')" id="navCalc" style="display:none;">CGPA</a>
+        <a onclick="showPage('bookmarks')" id="navBookmarks" style="display:none;">Bookmarks</a>
+        <a onclick="showPage('notes')" id="navNotes" style="display:none;">Notes</a>
+        <button id="nightToggle" onclick="toggleNight()" title="Toggle Night Mode" style="display:none;">🌙</button>
+        <a id="logoutBtn" onclick="logout()" style="display:none;">Logout</a>
+    </nav>
+</header>
+
+<main id="content"></main>
+
+<script>
+const videoData = [
+    { 
+        id: 1, name: "Data Structures", 
+        modules: ["M1: Time Complexity & Arrays", "M2: Linked List Masterclass", "M3: Stack & Queue Implementation", "M4: Advanced Trees (AVL/Red-Black)", "M5: Graph Theory & BFS/DFS"],
+        mainLink: "https://www.youtube.com/playlist?list=PLBlnK6fEyqRj9lld8sWIUNwlKfdUoPd1Y"
+    },
+    { 
+        id: 2, name: "Computer Organization", 
+        modules: ["M1: Boolean Algebra & K-Maps", "M2: Combinational Circuits", "M3: Instruction Cycle & ALU", "M4: Cache Memory Systems", "M5: Multiprocessor Architectures"],
+        mainLink: "https://www.youtube.com/playlist?list=PLBlnK6fEyqRgLLlzdgiTUKULKJPYc0A4R"
+    },
+    { 
+        id: 3, name: "Operating Systems", 
+        modules: ["M1: System Calls & Kernel", "M2: Scheduling Algorithms", "M3: Critical Section Problem", "M4: Demand Paging & LRU", "M5: File Allocation Methods"],
+        mainLink: "https://www.youtube.com/playlist?list=PLBlnK6fEyqRiVhbQDcy4Sotzjnuz7nw6E"
+    },
+    { 
+        id: 4, name: "Python Engineering", 
+        modules: ["M1: Data Types & Logic", "M2: List Comprehensions", "M3: Functional Programming", "M4: Exception Handling", "M5: Data Science Libraries"],
+        mainLink: "https://www.youtube.com/playlist?list=PLu0W_9lII9agICnT8t4iYVSZ3eykIAOME"
+    },
+    { 
+        id: 5, name: "Discrete Mathematics", 
+        modules: ["M1: Set Theory Foundations", "M2: Predicate Logic", "M3: Graph Coloring", "M4: Trees & Lattices", "M5: Boolean Algebra"],
+        mainLink: "https://www.youtube.com/playlist?list=PLBlnK6fEyqRhqJPDXcvYlLf5yt7cl7TdV"
+    },
+    { 
+        id: 6, name: "Introduction to Version Control", 
+        modules: ["M1: Git Fundamentals & Repository Setup", "M2: Branching & Merging Strategies", "M3: Remote Repositories & GitHub", "M4: Collaboration & Pull Requests", "M5: Advanced Git Workflows & Rebase"],
+        mainLink: "https://www.youtube.com/playlist?list=PLu0W_9lII9agbRIrDkYrjFbK4p7aCXqGU"
+    },
+    { 
+        id: 7, name: "English Communication", 
+        modules: ["M1: Effective Written Communication", "M2: Presentation Skills & Storytelling", "M3: Professional Interview Preparation", "M4: Business Correspondence & Report Writing", "M5: Public Speaking & Confidence Building"],
+        mainLink: "https://www.youtube.com/playlist?list=PLu0W_9lII9ahXMR3eGHO5nGbkLc2wLbfz"
+    }
+];
+
+function showPage(page) {
+    const content = document.getElementById("content");
+    
+    // Check if user is logged in for protected pages
+    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    const protectedPages = ['home', 'videoHub', 'notes', 'bookmarks', 'calculator', 'profile', 'liveClasses'];
+    
+    if (!isLoggedIn && protectedPages.includes(page)) {
+        showLoginPage();
+        return;
+    }
+
+    content.innerHTML = '';
+
+    if(page === 'login') {
+        showLoginPage();
+    }
+
+    else if(page === 'profile') {
+        const userName = localStorage.getItem('userName') || 'User';
+        const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+        content.innerHTML = `
+            <div style="max-width: 600px; margin: 60px auto; padding: 40px; background: var(--card-bg); border-radius: 25px; border: 1px solid rgba(255,255,255,0.1);">
+                <h1 style="text-align:center; color:var(--secondary); margin-top:0;">👤 My Profile</h1>
+                
+                <div style="text-align:center; margin: 40px 0;">
+                    <div class="profile-avatar" style="width:80px; height:80px; font-size:2.5em; margin:0 auto 20px;">${userName.charAt(0).toUpperCase()}</div>
+                    <h2 style="margin:10px 0; color:var(--text-main);">${userName}</h2>
+                    <p style="color:#94a3b8; margin:0;">${userEmail}</p>
+                </div>
+
+                <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:15px; margin:30px 0;">
+                    <h3 style="color:var(--secondary); margin-top:0;">Account Information</h3>
+                    <p style="margin:10px 0;"><strong>Status:</strong> <span style="color:#4ade80;">✓ Active</span></p>
+                    <p style="margin:10px 0;"><strong>Joined:</strong> ${new Date().toLocaleDateString()}</p>
+                    <p style="margin:10px 0;"><strong>Bookmarks:</strong> ${JSON.parse(localStorage.getItem('bookmarks') || '[]').length} saved</p>
+                </div>
+
+                <button class="launch-btn" onclick="showPage('home')" style="margin-top:30px; width:100%;">← Back to Home</button>
+            </div>`;
+    }
+
+    else if(page === 'home') {
+        content.innerHTML = `
+            <div class="hero">
+                <h1>The Future of BCA Learning</h1>
+                <p style="font-size: 1.4em; color: #94a3b8; max-width: 800px; margin: 20px auto;">
+                    Access university-aligned high-quality video lectures for every module. 
+                    Interactive learning designed for the modern developer.
+                </p>
+                <button class="launch-btn" style="width:250px; margin: 30px auto;" onclick="showPage('videoHub')">Start Learning Now</button>
+            </div>`;
+    }
+
+    else if(page === 'videoHub') {
+        content.innerHTML = `
+            <div style="text-align:center; padding-top:50px;">
+                <h1 style="font-size:3em;">📽️ Masterclass <span style="color:var(--accent);">Series</span></h1>
+                <p>Select a subject to unlock module lectures</p>
+            </div>
+            <div class="video-grid">${videoData.map(v => `
+                <div class="video-card">
+                    <div class="thumbnail-area">
+                        <div class="play-btn-circle">▶</div>
+                        <div class="bookmark-star" data-id="${v.id}" onclick="toggleBookmark(${v.id})">☆</div>
+                        <h2 style="position:absolute; bottom:15px; left:20px; margin:0; text-shadow: 2px 2px 10px black;">${v.name}</h2>
+                    </div>
+                    <div class="video-info">
+                        <h4 style="margin:0; color:var(--secondary);">Syllabus Modules:</h4>
+                        <div class="module-chip-list">
+                            ${v.modules.map((m,i) => `<span class="module-chip" onclick="showPage('notes')">${m}</span>`).join('')}
+                        </div>
+                        <a href="${v.mainLink}" target="_blank" class="launch-btn">Watch Masterclass</a>
+                    </div>
+                </div>`).join('')}
+            </div>`;
+        updateBookmarkIcons();
+        updateNoteIndicators();
+    }
+
+    else if(page === 'notes') {
+        content.innerHTML = notesPageHTML();
+    }
+
+    else if(page === 'liveClasses') {
+        content.innerHTML = `
+            <div class="live-header">
+                <h1 style="font-size:3em;">🗓️ Live Classes & Recordings</h1>
+                <p>Check the upcoming schedule and revisit past sessions</p>
+            </div>
+            <table class="live-schedule">
+                <tr><th>Topic</th><th>Instructor</th><th>Time Slot</th><th>Date</th></tr>
+                ${liveClassesData.schedule.map(c => `
+                    <tr>
+                        <td>${c.topic}</td>
+                        <td>${c.instructor}</td>
+                        <td>${c.time}</td>
+                        <td>${c.date}</td>
+                    </tr>
+                `).join('')}
+            </table>
+            <h2 style="text-align:center; margin-top:60px; color:var(--secondary);">📼 Recorded Sessions</h2>
+            <div class="recorded-grid">
+                ${liveClassesData.recorded.map(r => `
+                    <div class="recorded-card">
+                        <img src="${r.thumbnail}" alt="${r.title}">
+                        <div class="recorded-info">
+                            <h4>${r.title}</h4>
+                            <p>${r.date}</p>
+                            <a href="${r.link}" target="_blank" class="launch-btn" style="margin-top:10px; padding:8px; font-size:0.9em;">Watch</a>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        observeRecorded();
+    }
+
+    else if(page === 'bookmarks') {
+        content.innerHTML = `
+            <div style="text-align:center; padding-top:50px;">
+                <h1 style="font-size:3em;">🔖 Your Bookmarks</h1>
+                <p>Quick access to your saved subjects</p>
+            </div>
+            ${renderBookmarksPage()}`;
+        updateBookmarkIcons();
+    }
+
+    else if(page === 'calculator') {
+        content.innerHTML = `
+            <div class="grade-calc-container">
+                <h1 style="text-align:center; color:var(--accent);">📊 Elite CGPA Tracker</h1>
+                <div id="calc-body" style="margin-top:40px;"></div>
+                <button class="launch-btn" onclick="calculateCGPA()">Generate Report</button>
+                <div id="res-box" style="margin-top:30px; text-align:center; font-size:1.5em; display:none;"></div>
+            </div>`;
+        
+        const body = document.getElementById('calc-body');
+        videoData.forEach(s => {
+            body.innerHTML += `
+                <div class="calc-row">
+                    <strong>${s.name}</strong>
+                    <select class="grade">
+                        <option value="10">O (10)</option><option value="9">A+ (9)</option>
+                        <option value="8">A (8)</option><option value="7">B+ (7)</option>
+                    </select>
+                    <select class="credit">
+                        <option value="4">4 Credits</option><option value="3">3 Credits</option>
+                    </select>
+                </div>`;
+        });
+    }
+}
+
+// --- CORE LOGIC ---
+
+function notesPageHTML() {
+    let html = `
+        <div style="text-align:center; padding-top:50px;">
+            <h1 style="font-size:3em;">📝 Interactive <span style="color:var(--accent);">Notes</span></h1>
+            <p>Your thoughts are auto-saved locally for every module.</p>
+        </div>
+        <div class="notes-workspace">
+    `;
+
+    videoData.forEach(v => {
+        html += `<h2 class="subject-divider">${v.name}</h2>`;
+        v.modules.forEach((m, i) => {
+            const key = `note_${v.id}_${i}`;
+            const note = localStorage.getItem(key) || '';
+            
+            html += `
+                <div class="note-card">
+                    <div class="note-header">
+                        <strong style="color:var(--secondary)">${m}</strong>
+                        <span id="status-${v.id}-${i}" class="save-status" style="color:#94a3b8">Ready</span>
+                    </div>
+                    <textarea 
+                        class="note-editor" 
+                        placeholder="Start typing your study notes here..." 
+                        oninput="autoSaveNote(${v.id}, ${i}, this)"
+                    >${note}</textarea>
+                </div>
+            `;
+        });
+    });
+
+    html += `</div>`;
+    return html;
+}
+
+function autoSaveNote(subj, idx, element) {
+    const key = `note_${subj}_${idx}`;
+    const statusEl = document.getElementById(`status-${subj}-${idx}`);
+    
+    statusEl.innerHTML = "Saving...";
+    statusEl.style.color = "var(--accent)";
+
+    if (element.value.trim() === '') {
+        localStorage.removeItem(key);
+    } else {
+        localStorage.setItem(key, element.value);
+    }
+
+    setTimeout(() => {
+        statusEl.innerHTML = "✓ Saved";
+        statusEl.style.color = "#4ade80";
+    }, 600);
+}
+
+function toggleBookmark(id) {
+    let bm = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+    id = parseInt(id);
+    bm = bm.includes(id) ? bm.filter(x => x !== id) : [...bm, id];
+    localStorage.setItem('bookmarks', JSON.stringify(bm));
+    updateBookmarkIcons();
+}
+
+function updateBookmarkIcons() {
+    const bm = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+    document.querySelectorAll('.bookmark-star').forEach(el => {
+        const id = parseInt(el.dataset.id);
+        el.textContent = bm.includes(id) ? '★' : '☆';
+    });
+}
+
+function updateNoteIndicators() {
+    document.querySelectorAll('.module-chip').forEach((chip, i) => {
+        // This is simplified for the masterclass view
+        // In a real app, you'd map these to the specific subj/idx
+    });
+}
+
+function renderBookmarksPage() {
+    const bm = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+    const filtered = videoData.filter(v => bm.includes(v.id));
+    if (filtered.length === 0) return `<p style="text-align:center; padding:50px;">No bookmarks yet.</p>`;
+    
+    return `<div class="video-grid">${filtered.map(v => `
+        <div class="video-card">
+            <div class="thumbnail-area">
+                <div class="play-btn-circle">▶</div>
+                <div class="bookmark-star" data-id="${v.id}" onclick="toggleBookmark(${v.id})">★</div>
+                <h2 style="position:absolute; bottom:15px; left:20px; margin:0;">${v.name}</h2>
+            </div>
+            <div class="video-info">
+                <a href="${v.mainLink}" target="_blank" class="launch-btn">Watch Masterclass</a>
+            </div>
+        </div>`).join('')}</div>`;
+}
+
+// --- live classes data & utilities ---
+const liveClassesData = {
+    schedule: [
+        { topic: "Advanced Python Concepts", instructor: "Dr. Meera", time: "10:00 AM - 11:30 AM", date: "2026-03-10" },
+        { topic: "Git & GitHub Workshop", instructor: "Mr. Ajay", time: "2:00 PM - 3:30 PM", date: "2026-03-12" },
+        { topic: "Data Structures Q&A", instructor: "Prof. Rao", time: "4:00 PM - 5:00 PM", date: "2026-03-14" }
+    ],
+    recorded: [
+        { title: "Intro to Version Control - Live", date: "2026-02-20", thumbnail: "https://via.placeholder.com/400x200?text=Version+Control", link: "https://www.youtube.com/watch?v=example1" },
+        { title: "OS Scheduling Algorithms", date: "2026-02-25", thumbnail: "https://via.placeholder.com/400x200?text=Scheduling", link: "https://www.youtube.com/watch?v=example2" },
+        { title: "Python Functional Programming", date: "2026-03-01", thumbnail: "https://via.placeholder.com/400x200?text=Python+FP", link: "https://www.youtube.com/watch?v=example3" }
+    ]
+};
+
+function observeRecorded() {
+    const cards = document.querySelectorAll('.recorded-card');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2 });
+    cards.forEach(c => observer.observe(c));
+}
+
+function calculateCGPA() {
+    let pts = 0, crd = 0;
+    document.querySelectorAll('.calc-row').forEach(row => {
+        const g = parseFloat(row.querySelector('.grade').value);
+        const c = parseFloat(row.querySelector('.credit').value);
+        pts += (g * c); crd += c;
+    });
+    const res = (pts / crd).toFixed(2);
+    const box = document.getElementById('res-box');
+    box.style.display = 'block';
+    box.innerHTML = `Final CGPA Score: <span style="color:var(--accent); font-weight:bold;">${res}</span>`;
+}
+
+function toggleNight() {
+    const is = document.body.classList.toggle('night');
+    localStorage.setItem('night', is);
+}
+
+function showLoginPage() {
+    const content = document.getElementById("content");
+    content.innerHTML = `
+        <div class="login-container">
+            <div class="login-box">
+                <h1>Welcome</h1>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="login-btn">Login to Your Hub 🚀</button>
+                </form>
+            </div>
+        </div>
+    `;
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    const fullName = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Store user info in localStorage
+    localStorage.setItem('userLoggedIn', 'true');
+    localStorage.setItem('userName', fullName);
+    localStorage.setItem('userEmail', email);
+
+    // Update UI
+    updateUIForLogin(fullName);
+
+    // Redirect to home
+    showPage('home');
+}
+
+function logout() {
+    localStorage.setItem('userLoggedIn', 'false');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    
+    // Hide nav items
+    document.getElementById('profileDisplay').style.display = 'none';
+    document.getElementById('navHome').style.display = 'none';
+    document.getElementById('navVideoHub').style.display = 'none';
+    document.getElementById('navCalc').style.display = 'none';
+    document.getElementById('navLive').style.display = 'none';
+    document.getElementById('navBookmarks').style.display = 'none';
+    document.getElementById('navNotes').style.display = 'none';
+    document.getElementById('nightToggle').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'none';
+    
+    showLoginPage();
+}
+
+function updateUIForLogin(fullName) {
+    // Show nav items
+    document.getElementById('profileDisplay').style.display = 'flex';
+    document.getElementById('navHome').style.display = 'inline';
+    document.getElementById('navVideoHub').style.display = 'inline';
+    document.getElementById('navLive').style.display = 'inline';
+    document.getElementById('navCalc').style.display = 'inline';
+    document.getElementById('navBookmarks').style.display = 'inline';
+    document.getElementById('navNotes').style.display = 'inline';
+    document.getElementById('nightToggle').style.display = 'inline';
+    document.getElementById('logoutBtn').style.display = 'inline';
+    
+    // Update profile display
+    const initial = fullName.charAt(0).toUpperCase();
+    document.getElementById('avatarInitial').textContent = initial;
+    document.getElementById('profileName').textContent = fullName.split(' ')[0];
+}
+
+function initializeDefaultNotes() {
+    const defaultNotes = {
+        // Data Structures (ID: 1)
+        'note_1_0': `⏱️ TIME COMPLEXITY ANALYSIS
+• Big-O Notation: Represents worst-case time complexity
+  - O(1): Constant time - Direct array access, hash table lookup
+  - O(log n): Logarithmic - Binary search, balanced tree operations
+  - O(n): Linear - Simple loop through all elements
+  - O(n log n): Linearithmic - Merge sort, Quick sort (average)
+  - O(n²): Quadratic - Bubble sort, Selection sort, Nested loops
+  - O(2ⁿ): Exponential - Recursive fibonacci, subsets generation
+  - O(n!): Factorial - Permutations generation
+
+• Array Basics: Zero-indexed, contiguous memory, random access O(1)
+  - Insertion/Deletion at end: O(1), at middle: O(n)
+  - Searching: O(n) unsorted, O(log n) sorted
+• Space Complexity: Memory used in relation to input size`,
+
+        'note_1_1': `🔗 LINKED LIST STRUCTURES
+• Singly Linked List: Node contains data & next pointer
+  - Traversal: O(n), Search: O(n), Insertion: O(1) if position known
+  - Deletion: O(n) to find, O(1) to remove
+  - Benefits: Dynamic size, no reallocation needed
+
+• Doubly Linked List: Node has data, next, and previous pointers
+  - Reverse traversal possible, more memory overhead
+  - Insert/Delete at both ends: O(1)
+  - Useful for: Undo/Redo operations, navigation
+
+• Circular Linked List: Last node points back to first
+  - Useful for: Round-robin scheduling, circular buffers
+  - No NULL pointer check needed`,
+
+        'note_1_2': `📚 STACK & QUEUE OPERATIONS
+• Stack (LIFO - Last In First Out):
+  - Push: Add to top O(1), Pop: Remove from top O(1)
+  - Peek: View top without removing O(1)
+  - Applications: Function call stack, undo/redo, parenthesis matching
+  - Expression evaluation (Postfix/Prefix conversion)
+
+• Queue (FIFO - First In First Out):
+  - Enqueue: Add to rear O(1), Dequeue: Remove from front O(1)
+  - Applications: Task scheduling, printer queues, BFS traversal
+  
+• Circular Queue: Efficient space usage, wrap-around at boundaries
+• Priority Queue: Elements served by priority, not just arrival time
+• Deque (Double-ended queue): Insert/remove from both ends`,
+
+        'note_1_3': `🌳 ADVANCED TREE STRUCTURES
+• AVL Trees (Self-balancing BST):
+  - Balance factor = height(left) - height(right), must be in [-1, 0, 1]
+  - Rotations: Single left (LL), Single right (RR), Left-Right (LR), Right-Left (RL)
+  - Search/Insert/Delete: O(log n) guaranteed
+  - More rotations but faster searches vs Red-Black trees
+
+• Red-Black Trees: Fewer rotations, slightly slower searches
+  - Properties: Root is black, no red nodes adjacent, path black-height consistent
+  - Insert/Delete/Search: O(log n)
+  
+• B-Trees: Multi-way trees, useful for disk storage
+  - Balanced, reduces disk I/O operations
+  - Database indexing standard`,
+
+        'note_1_4': `📊 GRAPH THEORY & TRAVERSAL
+• Graph Basics: V = vertices, E = edges
+  - Directed vs Undirected, Weighted vs Unweighted
+  - Adjacency Matrix: O(V²) space, O(1) lookup
+  - Adjacency List: O(V+E) space, better for sparse graphs
+
+• Depth-First Search (DFS): Stack-based, explores deeply first
+  - Complexity: O(V+E)
+  - Applications: Cycle detection, topological sort, maze solving
+
+• Breadth-First Search (BFS): Queue-based, explores level by level
+  - Complexity: O(V+E)
+  - Applications: Shortest path in unweighted, connected components`,
+
+        // Computer Organization (ID: 2)
+        'note_2_0': `🔌 BOOLEAN ALGEBRA FUNDAMENTALS
+• Boolean Values: True (1) and False (0)
+• Basic Operations:
+  - AND (·): 1·1=1, else 0. Truth table both must be true
+  - OR (+): 0+0=0, else 1. Truth table at least one true
+  - NOT (¯): ¯1=0, ¯0=1. Complement operation
+
+• Laws of Boolean Algebra:
+  - Commutative: A+B = B+A, A·B = B·A
+  - Associative: (A+B)+C = A+(B+C)
+  - Distributive: A(B+C) = AB + AC
+  - De Morgan's Law: (A+B)¯ = A¯·B¯, (A·B)¯ = A¯+B¯
+  - Absorption: A + AB = A, A(A+B) = A
+
+• Karnaugh Maps (K-Maps): Minimize Boolean expressions
+  - Group adjacent 1s (powers of 2), derive simplified form`,
+
+        'note_2_1': `⚙️ COMBINATIONAL CIRCUITS
+• Multiplexers (MUX): Select one of many inputs
+  - 2¹ to 1 MUX, 2² to 1 MUX, ... 2ⁿ to 1
+  - Select lines determine which input goes to output
+  - Applications: Data routing, function generation
+
+• Demultiplexers (DEMUX): Route one input to many outputs
+  - Inverse of multiplexer operation
+  - Used in output selection
+
+• Encoders: Multiple inputs, few output lines (priority encoder)
+  - Convert multiple inputs to binary code
+  - Example: 4-to-2 encoder (4 inputs, 2 output bits)
+
+• Decoders: Few inputs, multiple outputs
+  - Convert binary code to specific output activation
+  - Example: 2-to-4 decoder (2 bits input, 4 outputs)
+
+• Adders: Half adder (sum, carry), Full adder (adds 3 bits)
+  - Ripple carry, Carry lookahead for optimization`,
+
+        'note_2_2': `💾 INSTRUCTION CYCLE & ALU
+• Instruction Cycle Phases:
+  1. Fetch: Get instruction from memory using program counter
+  2. Decode: Interpret instruction format and operands
+  3. Execute: Perform operation in ALU
+  4. Store: Write results back to registers/memory
+
+• Arithmetic Logic Unit (ALU) operations:
+  - Arithmetic: ADD, SUBTRACT, MULTIPLY, DIVIDE
+  - Logical: AND, OR, NOT, XOR
+  - Shift operations: Left shift, Right shift, Rotate
+
+• Status Flags set after ALU operation:
+  - Zero flag (Z): Result is zero
+  - Carry flag (C): Overflow occurred
+  - Sign flag (S): Result is negative
+  - Overflow flag (V): Signed overflow`,
+
+        'note_2_3': `🚀 CACHE MEMORY SYSTEMS
+• Cache Hierarchy: L1 (smallest, fastest) → L2 → L3 → Main Memory (slowest)
+  - L1: 32-64 KB per core, Split I-cache & D-cache
+  - L2: 256 KB-1 MB per core
+  - L3: 4-16 MB shared among cores
+
+• Locality of Reference:
+  - Temporal: Recently used data likely reused soon
+  - Spatial: Data near accessed locations likely needed soon
+  - Cache exploits both for efficiency
+
+• Cache Replacement Policies:
+  - LRU (Least Recently Used): Replace oldest accessed block
+  - LFU (Least Frequently Used): Replace least accessed
+  - FIFO: Replace oldest loaded block
+  - Random: Random replacement
+
+• Write Policies:
+  - Write-through: Update cache AND memory immediately
+  - Write-back: Update memory only when cache block evicted`,
+
+        'note_2_4': `🔄 MULTIPROCESSOR ARCHITECTURES
+• Parallel Computing: Multiple processors work on same/different tasks
+  - Speedup: Theoretical max is number of processors
+  - Amdahl's Law: Speedup limited by sequential portion
+
+• Shared Memory Systems:
+  - UMA (Uniform Memory Access): Equal latency for all processors
+  - NUMA (Non-Uniform): Local memory faster than remote
+
+• Multi-core Processors: Multiple cores on single chip
+  - Hyper-threading: Multiple threads per core
+  - Cache coherency problem: Keep shared data consistent
+
+• Synchronization: Locks, Semaphores, Mutexes
+  - Race condition: Multiple threads accessing same data
+  - Deadlock: Circular wait for resources`,
+
+        // Operating Systems (ID: 3)
+        'note_3_0': `🔐 SYSTEM CALLS & KERNEL
+• System Calls: Interface between user programs and kernel
+  - Context switch from user mode to kernel mode
+  - Examples: open(), read(), write(), fork(), exec()
+  
+• User Mode vs Kernel Mode:
+  - User mode: Restricted access, cannot directly access hardware
+  - Kernel mode: Full access to all resources
+  - Privileged instructions only in kernel mode
+
+• Interrupt Handling:
+  - Hardware interrupt: External device (I/O, timer)
+  - Software interrupt: System call or exception
+  - Interrupt handler: Kernel routine to handle interrupt
+  - ISR saves context, executes handler, restores context`,
+
+        'note_3_1': `📅 CPU SCHEDULING ALGORITHMS
+• FCFS (First Come First Served):
+  - Process in queue order, non-preemptive
+  - Convoy effect: Short jobs wait for long jobs
+  
+• SJF (Shortest Job First):
+  - Optimal for average waiting time
+  - Non-preemptive (FCFS with job), preemptive (SRTF)
+  - Starvation risk for long jobs
+
+• Priority Scheduling:
+  - Higher priority jobs execute first
+  - Aging prevents starvation
+
+• Round Robin (RR):
+  - Time quantum for each process
+  - Fair allocation, good for interactive systems
+  - Context switch overhead if quantum too small
+
+• Multilevel Queue: Different queues with different priorities
+• Multilevel Feedback Queue: Process can move between queues`,
+
+        'note_3_2': `🔒 CRITICAL SECTION PROBLEM
+• Mutual Exclusion: Only one process in critical section at time
+  - Entry section: Wait for access
+  - Critical section: Shared resource access
+  - Exit section: Release access
+  - Remainder section: Continue execution
+
+• Peterson's Solution: Software solution for 2 processes
+  - Uses flags and turn variable
+  - Ensures mutual exclusion, no deadlock, no unnecessary waiting
+
+• Semaphore: Integer variable with wait() and signal() operations
+  - Binary semaphore: 0 or 1 (similar to mutex)
+  - Counting semaphore: Multiple units available
+
+• Monitor: High-level synchronization construct
+  - Encapsulates shared resources
+  - Condition variables for waiting`,
+
+        'note_3_3': `💿 VIRTUAL MEMORY & PAGING
+• Demand Paging: Load pages only when needed
+  - Page fault: Requested page not in memory
+  - Page replacement: Evict page to bring new page
+  - Lazy loading improves startup time
+
+• Page Replacement Algorithms:
+  - LRU (Least Recently Used): Replace least recently accessed
+  - FIFO: Replace oldest page
+  - Optimal: Replace page needed farthest in future (theoretical)
+  - LFU: Replace least frequently used
+
+• Thrashing: Excessive page faults, system spending time swapping
+  - Working set: Set of pages process actively uses
+  - Working set model prevents thrashing
+
+• Virtual Address to Physical Address Mapping:
+  - Page table stores mapping
+  - TLB (Translation Lookaside Buffer) caches mappings`,
+
+        'note_3_4': `📁 FILE SYSTEM STRUCTURES
+• File Allocation Methods:
+  - Contiguous: Blocks in consecutive disk sectors (fragmentation risk)
+  - Linked: Each block contains pointer to next (slow sequential access)
+  - Indexed: Inode contains all block pointers (most common in UNIX/Linux)
+  
+• Inode Structure: Contains file metadata & block pointers
+  - Direct pointers: First 12 blocks
+  - Indirect pointers: Single, double, triple indirection
+  - Links to blocks stored non-contiguously
+
+• Directory Structure:
+  - Linear list: File entries in order (slow search)
+  - Hash table: Fast lookup using filename hash
+
+• File System Types:
+  - FAT (File Allocation Table): Legacy, limited
+  - NTFS (New Technology FS): Windows standard
+  - ext4 (Fourth Extended FS): Linux standard`,
+
+        // Python Engineering (ID: 4)
+        'note_4_0': `🐍 PYTHON DATA TYPES & LOGIC
+• Basic Data Types:
+  - int: Integer numbers, unlimited precision
+  - float: Floating point numbers, includes inf and nan
+  - str: Strings, immutable, support Unicode
+  - bool: True or False (subclass of int)
+  - None: Null value
+
+• Operators:
+  - Arithmetic: +, -, *, /, //, %, **
+  - Comparison: ==, !=, <, >, <=, >=
+  - Logical: and, or, not (short-circuit evaluation)
+  - Membership: in, not in (for collections)
+
+• Type Conversion:
+  - int(), float(), str(), bool()
+  - Implicit conversions in operations
+  - Type checking: type(), isinstance()`,
+
+        'note_4_1': `📋 LIST COMPREHENSIONS
+• Syntax: [expression for item in iterable if condition]
+  
+• Examples:
+  - squares = [x**2 for x in range(10)]
+  - evens = [x for x in range(20) if x % 2 == 0]
+  - nested = [(x, y) for x in range(3) for y in range(3)]
+
+• Advantages: More readable, faster than loops, single line
+  
+• Dictionary & Set Comprehensions:
+  - Dict: {key: value for item in iterable if condition}
+  - Set: {expression for item in iterable if condition}
+  
+• Nested Comprehensions: Multiple loops, maintained readability
+  
+• Generator Expression: (expr for item in iterable) - memory efficient`,
+
+        'note_4_2': `🎯 FUNCTIONAL PROGRAMMING
+• Lambda Functions: Anonymous functions
+  - Syntax: lambda args: expression
+  - Example: square = lambda x: x ** 2
+
+• map(function, iterable): Apply function to each item
+  - Returns map object (iterator in Python 3)
+  - Example: list(map(str.upper, ['a', 'b', 'c']))
+
+• filter(function, iterable): Keep items where function true
+  - Returns filter object (iterator)
+  - Example: evens = list(filter(lambda x: x%2==0, range(10)))
+
+• reduce(function, iterable, initializer): Accumulate values
+  - Example: sum = reduce(lambda x,y: x+y, [1,2,3,4])
+
+• First-class functions: Functions as objects, pass as arguments
+  - Closures: Inner functions accessing outer scope variables
+  - Decorators: Modify function behavior without changing code`,
+
+        'note_4_3': `⚠️ EXCEPTION HANDLING
+• Try-Except Block: Catch and handle errors gracefully
+  - try: Code that might raise exception
+  - except: Handle specific exception types
+  - else: Execute if no exception
+  - finally: Always execute (cleanup code)
+
+• Exception Hierarchy:
+  - BaseException (root)
+    - SystemExit, KeyboardInterrupt
+    - Exception (most user code)
+      - ValueError, TypeError, KeyError, IndexError...
+
+• Raising Exceptions:
+  - raise ExceptionType("message")
+  - Custom exceptions: class MyError(Exception): pass
+
+• Best Practices:
+  - Catch specific exceptions, not bare except
+  - Use finally for resource cleanup (files, connections)
+  - Avoid silent failures`,
+
+        'note_4_4': `📊 DATA SCIENCE LIBRARIES
+• NumPy: Numerical computing with arrays
+  - np.array(), ndarray operations (vectorized)
+  - Broadcasting: Operate on different shaped arrays
+  - Linear algebra: np.linalg for matrix operations
+
+• Pandas: Data analysis and manipulation
+  - Series: 1D labeled array
+  - DataFrame: 2D table (rows & columns)
+  - Read/write CSV, Excel, SQL
+  - GroupBy, merge, pivot operations
+
+• Matplotlib: Data visualization
+  - plt.plot(), plt.bar(), plt.scatter()
+  - Subplots for multiple graphs
+  - Customization: colors, labels, legends, styles
+  
+• Common Workflow:
+  - Load data → Explore (shape, dtypes) → Clean → Analyze → Visualize`,
+
+        // Discrete Mathematics (ID: 5)
+        'note_5_0': `🎢 SET THEORY FOUNDATIONS
+• Set Basics: Unordered collection of distinct elements
+  - Notation: {1, 2, 3} or {x | condition}
+  - Empty set: ∅ or {}
+  - Cardinality: |S| = number of elements
+
+• Set Operations:
+  - Union (A ∪ B): Elements in A or B or both
+  - Intersection (A ∩ B): Elements in both A and B
+  - Complement (A'): Elements not in A
+  - Difference (A - B): Elements in A but not B
+  - Cartesian product (A × B): All ordered pairs
+
+• Set Relations:
+  - Subset: A ⊆ B if all elements of A in B
+  - Proper subset: A ⊂ B if A ⊆ B but A ≠ B
+  - Power set: P(A) all subsets of A, |P(A)| = 2^|A|
+
+• Venn Diagrams: Visual representation of set relationships`,
+
+        'note_5_1': `🏛️ PREDICATE LOGIC
+• Propositions: Statements that are true or false
+• Logical Connectives:
+  - ¬ (NOT): Negation
+  - ∧ (AND): Conjunction (both true)
+  - ∨ (OR): Disjunction (at least one true)
+  - → (Implication): P → Q means "if P then Q"
+  - ↔ (Biconditional): P ↔ Q means "P if and only if Q"
+
+• Quantifiers:
+  - ∀x (For all): Universal quantifier
+  - ∃x (There exists): Existential quantifier
+  - Example: ∀x ∈ ℝ, x² ≥ 0 (all reals squared non-negative)
+
+• Logical Equivalences:
+  - De Morgan's Laws: ¬(P∧Q) = ¬P∨¬Q
+  - Distribution: P∧(Q∨R) = (P∧Q)∨(P∧R)
+
+• Proof Techniques:
+  - Direct proof: Assume hypothesis, show conclusion
+  - Proof by contradiction: Assume negation, get contradiction
+  - Mathematical induction: Base case + inductive step`,
+
+        'note_5_2': `🎨 GRAPH COLORING
+• Chromatic Number χ(G): Minimum colors needed to color vertices
+  - Adjacent vertices must have different colors
+  - No algorithm polynomial time known (NP-complete)
+
+• Greedy Coloring Algorithm:
+  - Order vertices, assign colors in order
+  - Use smallest available color not used by neighbors
+  - Performance depends on vertex ordering
+
+• Applications:
+  - Map coloring: Adjacent countries different colors
+  - Register allocation: Variables in compiler optimization
+  - Scheduling: No conflicts in adjacent time slots
+  - Frequency assignment: No interference in wireless networks
+
+• Four Color Theorem: Any planar graph needs max 4 colors
+  - Proven by computer verification (controversial)
+
+• Special Cases:
+  - Bipartite graphs: χ = 2
+  - Cycle length odd: χ = 3, even: χ = 2
+  - Complete graph Kn: χ = n`,
+
+        'note_5_3': `🌳 TREES & LATTICES
+• Tree Properties:
+  - Connected acyclic graph
+  - n nodes → n-1 edges
+  - Unique path between any two nodes
+  - Root: Distinguished node (if directed)
+
+• Spanning Tree: Subgraph including all vertices, acyclic
+  - MST (Minimum Spanning Tree): Minimum total weight
+  - Kruskal's algorithm: Greedy, sort edges by weight
+  - Prim's algorithm: Grow tree from starting vertex
+
+• Tree Terminology:
+  - Leaf: Node with degree 1 (no children in rooted tree)
+  - Parent, child, ancestor, descendant relationships
+  - Height: Longest path from root to leaf
+
+• Lattice: Partially ordered set with meet and join
+  - Meet (∧): Greatest lower bound
+  - Join (∨): Least upper bound
+  - Complete lattice: Every subset has meet and join
+
+• Hasse Diagram: Visual representation of partial order
+  - Eliminates transitive edges for clarity`,
+
+        'note_5_4': `⚡ BOOLEAN ALGEBRA
+• Boolean Operations (covered earlier):
+  - AND, OR, NOT, NAND, NOR, XOR, XNOR
+
+• Normal Forms:
+  - DNF (Disjunctive Normal Form): OR of ANDs
+    Example: (A∧B) ∨ (¯A∧C)
+  - CNF (Conjunctive Normal Form): AND of ORs
+    Example: (A∨B) ∧ (¯A∨C)
+
+• Conversion Between Forms:
+  - Use De Morgan's laws and distribution laws
+  - K-maps aid visualization
+
+• Boolean Functions: F(x₁, x₂, ..., xₙ) → {0, 1}
+  - Truth tables define functions completely
+  - Minimization reduces gates/complexity`,
+
+        // Introduction to Version Control (ID: 6)
+        'note_6_0': `🔧 GIT FUNDAMENTALS & REPOSITORY SETUP
+• What is Git: Distributed version control system for tracking changes
+  - Every developer has full repository copy
+  - Track who, what, when, why of changes
+
+• Installation & Initial Setup:
+  - git config --global user.name "Your Name"
+  - git config --global user.email "your@email.com"
+  - git config --list (view settings)
+
+• Creating Repository:
+  - git init (create new repository)
+  - git clone <url> (copy existing repository)
+
+• File Lifecycle:
+  - Untracked: New files not added
+  - Staged: Files added but not committed
+  - Committed: Changes saved in repository
+  - Modified: Changes made after last commit
+
+• Basic Commands:
+  - git status (show file states)
+  - git add <file> (stage files)
+  - git commit -m "message" (commit changes)
+  - git log (view commit history)`,
+
+        'note_6_1': `🌿 BRANCHING & MERGING STRATEGIES
+• Why Branches: Isolate work, parallel development, feature branches
+
+• Creating & Switching:
+  - git branch <name> (create branch)
+  - git checkout <name> (switch branch)
+  - git checkout -b <name> (create and switch)
+
+• Branch Types:
+  - Master/Main: Production-ready code
+  - Development: Integration branch
+  - Feature: New features (feature/feature-name)
+  - Hotfix: Critical bug fixes (hotfix/bug-name)
+
+• Merging Strategies:
+  - Fast-forward merge: Move pointer if no divergence
+  - Three-way merge: Combine parent commits
+  - Recursive merge: Multiple common ancestors
+
+• Merge Conflicts:
+  - Occur when same lines changed differently
+  - Markers: <<<<<<<, =======, >>>>>>>
+  - Resolve: Edit conflicts, stage, commit
+
+• Rebasing Alternative: Rewrite history (caution!)
+  - git rebase <branch> (replay commits)
+  - Cleaner history but changes SHAs`,
+
+        'note_6_2': `🌐 REMOTE REPOSITORIES & GITHUB
+• Remote Repository: Central copy (GitHub, GitLab, Bitbucket)
+  - Backup and collaboration enablement
+
+• Setting Up Remote:
+  - git remote add origin <url>
+  - git remote -v (view remotes)
+  - git remote set-url origin <new-url> (change URL)
+
+• Pushing & Pulling:
+  - git push origin <branch> (send commits to remote)
+  - git pull origin <branch> (fetch and merge remote changes)
+  - git fetch (fetch without merge)
+
+• SSH vs HTTPS:
+  - SSH: Private key authentication, no password needed
+  - HTTPS: Username/token, simpler setup
+
+• GitHub Features:
+  - Fork: Personal copy of someone's repository
+  - SSH key setup for passwordless access
+  - GitHub Pages for static site hosting`,
+
+        'note_6_3': `👥 COLLABORATION & PULL REQUESTS
+• Pull Request (PR): Proposed changes for review
+  - Description: What changed and why
+  - Linked issues: Reference related issue numbers
+  - Code review: Team feedback before merge
+
+• PR Workflow:
+  1. Create feature branch from main
+  2. Commit and push changes
+  3. Open PR with description
+  4. Team reviews, requests changes if needed
+  5. Merge after approval
+
+• Best Practices:
+  - Small, focused PRs (easier to review)
+  - Descriptive commit messages
+  - Update branch before PR (avoid conflicts)
+  - One feature per PR
+
+• Review Process:
+  - Suggest changes in specific lines
+  - Approve or request changes
+  - CI/CD checks run automatically`,
+
+        'note_6_4': `⚙️ ADVANCED GIT WORKFLOWS & REBASE
+• Interactive Rebase: Modify commit history
+  - git rebase -i HEAD~3 (edit last 3 commits)
+  - Commands: pick, reword, edit, squash, fixup, drop
+
+• Squashing Commits: Combine multiple commits
+  - Clean history, logical units of work
+  - git rebase -i (mark as 'squash' or 's')
+
+• Cherry-pick: Apply specific commits to branch
+  - git cherry-pick <commit-hash>
+  - Useful for backporting fixes
+
+• Git Flow Workflow:
+  - Separate branches: main, develop, release, hotfix
+  - Structured approach for larger teams
+
+• Undoing Changes:
+  - git reset (unstage changes)
+  - git revert (create new commit undoing changes)
+  - git checkout -- <file> (discard working changes)
+
+• Stashing: Temporarily save uncommitted changes
+  - git stash (save changes)
+  - git stash pop (restore changes)
+  - Switch branches without committing`,
+
+        // English Communication (ID: 7)
+        'note_7_0': `✍️ EFFECTIVE WRITTEN COMMUNICATION
+• Key Principles:
+  - Clarity: Use simple, direct language
+  - Conciseness: Eliminate unnecessary words
+  - Completeness: Include all needed information
+  - Coherence: Logical flow and organization
+
+• Structure:
+  - Introduction: Hook, context, thesis
+  - Body: Supporting points with evidence
+  - Conclusion: Summarize, call to action
+
+• Grammar & Tone:
+  - Active voice preferred over passive
+  - Vary sentence length for rhythm
+  - Tone matches audience (formal/informal)
+  - Avoid jargon unless audience technical
+
+• Audience Analysis:
+  - Who reads? What do they need?
+  - Tailor vocabulary and examples
+  - Consider cultural background`,
+
+        'note_7_1': `🎤 PRESENTATION SKILLS & STORYTELLING
+• Presentation Structure:
+  - Opening hook: Start with story or question
+  - Tell-Show-Tell: State point, demonstrate, reinforce
+  - Closing statement: Memorable takeaway
+
+• Non-Verbal Communication:
+  - Eye contact: Engage different audience sections
+  - Body language: Open posture, purposeful gestures
+  - Posture: Stand confidently, avoid pacing
+  - Hand movements: Emphasize points naturally
+
+• Visual Aids:
+  - Slides support, not replace, speaker
+  - Minimal text (6 words per bullet max)
+  - High contrast, readable fonts
+  - Consistent design and color scheme
+
+• Storytelling Techniques:
+  - Begin with relatable scenario
+  - Include conflict/challenge
+  - Resolution with lesson learned
+  - Emotional connection with audience`,
+
+        'note_7_2': `💼 PROFESSIONAL INTERVIEW PREPARATION
+• Pre-Interview:
+  - Research company: Mission, culture, recent news
+  - Practice common questions (tell me about yourself)
+  - Prepare questions to ask (shows interest)
+  - Plan route and arrive 10 minutes early
+
+• STAR Method: Structure behavioral answers
+  - Situation: Context and challenge
+  - Task: Your responsibility
+  - Action: What you specifically did
+  - Result: Outcome and impact
+
+• Common Questions:
+  - Strengths/Weaknesses: Honest and strategic
+  - Tell me about yourself: 2-minute elevator pitch
+  - Why this company: Research-backed answer
+  - Conflict resolution: Collaborative approach
+
+• Non-Verbal Cues:
+  - Handshake: Firm, confident (not crushing)
+  - Posture: Sit up straight, lean slightly forward
+  - Smile: Natural, genuine engagement
+  - Eye contact: Balance (not staring)`,
+
+        'note_7_3': `📧 BUSINESS CORRESPONDENCE & REPORT WRITING
+• Email Etiquette:
+  - Subject line: Clear, specific purpose
+  - Greeting: "Dear [Name]" for formal, "Hi [Name]" casual
+  - First paragraph: Main point (readers are busy)
+  - Closing: Professional sign-off
+  - Signature: Name, title, contact info
+
+• Professional Tone in Writing:
+  - Avoid: Slang, emojis (unless casual culture)
+  - Be: Polite, professional, punctual (respond same day)
+  - Avoid: ALL CAPS (seen as yelling)
+
+• Report Structure:
+  - Executive Summary: Problems and solutions
+  - Introduction: Background and objectives
+  - Body: Detailed findings and analysis
+  - Conclusion: Key takeaways
+  - Recommendations: Next steps
+
+• Technical Writing:
+  - Jargon definitions for mixed audience
+  - Diagrams and charts for complex data
+  - Active voice for clarity
+  - Standards and compliance notes`,
+
+        'note_7_4': `🎯 PUBLIC SPEAKING & CONFIDENCE BUILDING
+• Managing Nervousness:
+  - Deep breathing: Slow, deep breaths before speaking
+  - Practice: Reduces anxiety significantly
+  - Visualization: Imagine successful presentation
+  - Positive self-talk: Replace doubt with confidence
+
+• Voice Modulation:
+  - Pace: Vary speed, pause for emphasis
+  - Volume: Loud enough to project
+  - Tone: Match content (serious/light/uplifting)
+  - Avoid: Monotone, filler words (um, uh, like)
+
+• Audience Engagement:
+  - Ask questions: Interactive, not one-way
+  - Move around: Use space purposefully
+  - Make eye contact: Speak to individuals
+  - Read room: Adjust pace if losing attention
+
+• Recovery Techniques:
+  - Mistake: Continue smoothly (audience often doesn't notice)
+  - Blank mind: Pause, take breath, reference notes
+  - Technical failure: Have backup plan (printed slides)
+  
+• Advanced Skills:
+  - Storytelling techniques for impact
+  - Handling hostile questions professionally
+  - Using silence for effect`
+    };
+
+    // add headers with subject/module detail
+    Object.keys(defaultNotes).forEach(key => {
+        const parts = key.split('_'); // ['note', subjId, modIdx]
+        if (parts.length === 3) {
+            const subjId = parts[1];
+            const modIdx = parseInt(parts[2], 10);
+            const subj = videoData.find(v => v.id == subjId);
+            if (subj) {
+                const moduleTitle = subj.modules[modIdx] || '';
+                const header = `Subject: ${subj.name}\nModule: ${moduleTitle}\n\nThis section covers core concepts and examples for the above module.\n\n`;
+                defaultNotes[key] = header + defaultNotes[key];
+            }
+        }
+    });
+
+    // Initialize notes only once
+    const alreadyInitialized = localStorage.getItem('notesInitialized');
+    if (!alreadyInitialized) {
+        Object.keys(defaultNotes).forEach(key => {
+            if (!localStorage.getItem(key)) {
+                localStorage.setItem(key, defaultNotes[key]);
+            }
+        });
+        localStorage.setItem('notesInitialized', 'true');
+    }
+}
+
+window.onload = () => {
+    initializeDefaultNotes();
+    if(localStorage.getItem('night')==='true') document.body.classList.add('night');
+    
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    if (isLoggedIn) {
+        const fullName = localStorage.getItem('userName') || 'User';
+        updateUIForLogin(fullName);
+        showPage('home');
+    } else {
+        showLoginPage();
+    }
+};
+</script>
+
+</body>
+</html>
