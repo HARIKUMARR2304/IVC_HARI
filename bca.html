@@ -1,0 +1,1022 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCA Study Hub Pro - Ultimate Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+    /* 🎨 CSS VARIABLES & THEMES */
+    :root {
+        /* CHANGED: New Professional Blue & Orange Theme */
+        --primary: #1e3c72;   /* Royal Blue */
+        --secondary: #2a5298; /* Indigo */
+        --accent: #ff9800;    /* Vibrant Orange */
+        
+        --pdf-color: #e74c3c;
+        --bg: #f4f7f6;        /* Very Soft Blue-Grey */
+        --card-bg: #ffffff;
+        --text-main: #2c3e50; /* Dark Slate Blue */
+        --text-sub: #607d8b;  /* Muted Blue Grey */
+        --header-text: #fff;
+        --shadow: 0 4px 20px rgba(0,0,0,0.08);
+        --success: #27ae60;
+        --error: #c0392b;
+    }
+
+    body.dark-mode {
+        /* CHANGED: Dark Mode variants */
+        --primary: #2c3e50;
+        --secondary: #4ca1af;
+        --bg: #121212;
+        --card-bg: #1e1e1e;
+        --text-main: #ecf0f1;
+        --text-sub: #bdc3c7;
+        --shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text-main); transition: background 0.3s, color 0.3s; overflow-x: hidden; }
+
+    /* HEADER */
+    header { background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: var(--header-text); box-shadow: 0 3px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 100; }
+    header h1 { margin: 0; font-size: 1.5em; letter-spacing: 0.5px; }
+    
+    .nav-container { display: flex; align-items: center; gap: 20px; }
+    nav { display: flex; gap: 20px; }
+    nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-weight: 500; transition: 0.3s; font-size: 0.95em; cursor: pointer; }
+    nav a:hover, nav a.active { color: var(--accent); opacity: 1; font-weight: 700; }
+    
+    .menu-icon { display: none; font-size: 1.8em; cursor: pointer; color: white; }
+    .theme-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2em; padding: 0; color: white; transition: 0.3s;}
+    .theme-btn:hover { background: rgba(255,255,255,0.3); }
+
+    @media (max-width: 768px) {
+        .menu-icon { display: block; }
+        nav { display: none; position: absolute; top: 60px; left: 0; width: 100%; background: var(--card-bg); flex-direction: column; padding: 20px 0; box-shadow: 0 5px 10px rgba(0,0,0,0.2); text-align: center; }
+        nav.active { display: flex; }
+        nav a { color: var(--text-main); padding: 15px; border-bottom: 1px solid rgba(0,0,0,0.05); display: block; }
+    }
+
+    /* MAIN */
+    main { padding: 30px 20px; min-height: 85vh; max-width: 1200px; margin: 0 auto; }
+    .card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); padding: 25px; border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+    .card:hover { transform: translateY(-10px); box-shadow: 0 15px 45px rgba(0,0,0,0.1); border-color: var(--accent); }
+    .note-card { cursor: pointer; border-left: 4px solid var(--secondary); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
+
+    /* PROGRESS BAR */
+    .progress-container {
+        width: 100%;
+        background-color: #e0e0e0;
+        border-radius: 10px;
+        margin: 20px 0;
+        height: 10px;
+        overflow: hidden;
+    }
+    .progress-bar {
+        height: 100%;
+        background: var(--accent);
+        width: 0%;
+        transition: width 0.5s ease-in-out;
+    }
+
+    /* COMPONENTS */
+    .hero { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; padding: 60px 20px; text-align: center; border-radius: 16px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+    .hero button { background: var(--accent); color: white; font-weight: bold; padding: 12px 30px; border-radius: 30px; border: none; margin-top: 20px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4); }
+    .hero button:hover { transform: scale(1.05); background: #f57c00; }
+    
+    .pdf-btn { background-color: var(--pdf-color); color: white; border: none; padding: 10px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; margin-top: 15px; text-decoration: none; transition: background 0.2s; }
+    .pdf-btn:hover { background-color: #c0392b; }
+
+    /* DIAGRAMS (Mermaid) */
+    .diagram-box { background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0,0,0,0.05); border-radius: 10px; padding: 20px; text-align: center; margin: 20px 0; overflow-x: auto;}
+    
+    /* FAVORITE ICON */
+    .fav-icon { position: absolute; top: 15px; right: 15px; font-size: 1.5em; cursor: pointer; color: #ddd; transition: 0.2s; z-index: 10;}
+    .fav-icon.active { color: var(--accent); transform: scale(1.1); }
+
+    /* CALCULATOR */
+    .calc-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    .calc-row input, .calc-row select { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #ddd; background: var(--bg); color: var(--text-main); outline: none;}
+    .calc-row input:focus, .calc-row select:focus { border-color: var(--secondary); }
+    .result-box { background: var(--primary); color: white; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; font-size: 1.2em; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
+
+    /* UTILS */
+    .video-thumb { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; background: #000; }
+    .watch-btn { background: #cc0000; color: white; text-decoration: none; padding: 10px; text-align: center; border-radius: 6px; margin-top: 15px; font-weight: bold; display: block; transition: 0.3s; }
+    .quiz-container { max-width: 600px; margin: 0 auto; text-align: center; }
+    .option { background: var(--card-bg); padding: 15px; margin: 10px 0; border-radius: 8px; cursor: pointer; border: 2px solid transparent; box-shadow: var(--shadow); transition: 0.2s; color: var(--text-main); }
+    .option:hover { border-color: var(--secondary); }
+    .option.correct { background: var(--success); color: white; }
+    .option.wrong { background: var(--error); color: white; }
+    .option.disabled { pointer-events: none; opacity: 0.6; }
+    
+    /* Login */
+    .login-container { max-width: 400px; margin: 50px auto; padding: 40px; background: var(--card-bg); border-radius: 15px; box-shadow: var(--shadow); text-align: center; }
+    input { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #ccc; background: var(--bg); color: var(--text-main); box-sizing: border-box; }
+    button.primary-btn { width: 100%; padding: 12px; background: linear-gradient(90deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+    button.primary-btn:hover { opacity: 0.9; }
+    
+    .fade { animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
+
+    /* SHOP & PRICING STYLES */
+    .price-tag {
+        font-size: 1.2em;
+        font-weight: 700;
+        color: var(--success);
+        margin: 10px 0;
+    }
+
+    .buy-btn {
+        background: linear-gradient(90deg, #ff9800, #f57c00);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        transition: 0.3s;
+    }
+
+    .buy-btn:hover {
+        transform: scale(1.02);
+        box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+    }
+
+    /* PAYMENT MODAL STYLES */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .payment-modal {
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        position: relative;
+        animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .method-box {
+        border: 2px solid #eee;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 15px 0;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .method-box:hover { border-color: var(--accent); background: rgba(255,152,0,0.05); }
+
+    .qr-placeholder {
+        width: 150px;
+        height: 150px;
+        margin: 10px auto;
+        background: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ddd;
+    }
+
+    /* PROFILE PAGE STYLES */
+    .profile-header {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        text-align: center;
+    }
+
+    .avatar {
+        width: 80px;
+        height: 80px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .stats-row {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .stat-box {
+        background: rgba(255,255,255,0.1);
+        padding: 12px 25px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+    }
+
+    table th {
+        color: var(--text-sub);
+        font-size: 0.8em;
+        text-transform: uppercase;
+        padding: 10px;
+    }
+
+    table td {
+        padding: 10px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    table tr:hover {
+        background: var(--bg);
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>🎓 BCA Hub <span style="font-size:0.5em; background:var(--accent); padding:3px 8px; border-radius:4px; vertical-align:middle; text-transform: uppercase;">PRO</span></h1>
+    <div class="nav-container">
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <nav id="navbar">
+            <a onclick="showPage('home')">Home</a>
+            <a onclick="showPage('notes')">Notes</a>
+            <a onclick="showPage('shop')">💰 Buy Notes</a>
+            <a onclick="showPage('calculator')">GPA Calc</a>
+            <a onclick="showPage('videos')">Videos</a>
+            <a onclick="showPage('favorites')">❤️ Saved</a>
+            <a onclick="showPage('profile')">👤 My Account</a>
+            <a id="login-link" onclick="handleLoginLogout()">Login</a>
+        </nav>
+        <button class="theme-btn" onclick="openGlobalSearch()" title="Search Topics">🔎</button>
+        <button class="theme-btn" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
+    </div>
+</header>
+
+<main id="content" class="fade"></main>
+
+<!-- PAYMENT MODAL -->
+<div id="paymentModal" class="modal-overlay">
+    <div class="payment-modal">
+        <button onclick="closePayment()" style="position:absolute; right:15px; top:15px; border:none; background:none; cursor:pointer; font-size:1.5rem;">&times;</button>
+        <h3 id="paymentTitle">Complete Payment</h3>
+        <p id="paymentAmount" style="font-weight:bold; color:var(--primary);"></p>
+        
+        <div id="methodSelection">
+            <p>Select Payment Method:</p>
+            <div class="method-box" onclick="showUPIScreen()">
+                <span style="font-size:1.5rem;">📱</span>
+                <div style="text-align:left;"><strong>UPI / QR Code</strong><br><small>GPay, PhonePe, Paytm</small></div>
+            </div>
+            <div class="method-box" onclick="showCardScreen()">
+                <span style="font-size:1.5rem;">💳</span>
+                <div style="text-align:left;"><strong>Debit / Credit Card</strong><br><small>Visa, Mastercard, RuPay</small></div>
+            </div>
+            <div class="method-box" onclick="showNetBanking()">
+                <span style="font-size:1.5rem;">🏦</span>
+                <div style="text-align:left;"><strong>Net Banking</strong><br><small>All major Indian banks</small></div>
+            </div>
+        </div>
+
+        <div id="qrScreen" style="display:none;">
+            <p>Scan to Pay using any UPI App</p>
+            <div class="qr-placeholder">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=BCAHubPayment" alt="QR Code">
+            </div>
+            <button class="primary-btn" onclick="finishPayment()">I have paid</button>
+        </div>
+
+        <div id="cardScreen" style="display:none;">
+            <input type="text" placeholder="Card Number" maxlength="16">
+            <div style="display:flex; gap:10px;">
+                <input type="text" placeholder="MM/YY" maxlength="5">
+                <input type="password" placeholder="CVV" maxlength="3">
+            </div>
+            <button class="primary-btn" onclick="finishPayment()">Pay Now</button>
+        </div>
+
+        <div id="netBankingScreen" style="display:none;">
+            <p>Select your Bank:</p>
+            <select id="bankSelect" style="width:100%; padding:10px; margin-bottom:15px; border-radius:8px; border:1px solid #ddd;">
+                <option>SBI</option>
+                <option>HDFC</option>
+                <option>ICICI</option>
+                <option>Axis Bank</option>
+            </select>
+            <button class="primary-btn" onclick="finishPayment()">Login to Bank</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ---------------- INITIALIZATION ---------------- */
+let isLoggedIn = false;
+let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+let userStats = JSON.parse(localStorage.getItem('userStats')) || { xp: 0 };
+
+// Initialize Mermaid.js configuration
+mermaid.initialize({ startOnLoad: false, theme: 'default' });
+
+window.onload = function() {
+    if(localStorage.getItem('isLoggedIn') === 'true') isLoggedIn = true;
+    updateLoginLink();
+    if(localStorage.getItem('theme') === 'dark') toggleTheme(false);
+    showPage('home');
+};
+
+/* ---------------- DATA WITH MERMAID DIAGRAMS ---------------- */
+const notes = [
+    // 1. Data Structures
+    {
+        id: 1, subject: "Data Structures", topic: "Linked List", pdfFile: "DS_LL.pdf",
+        price: 299,
+        content: "A Linked List is a linear data structure where elements are not stored at contiguous memory locations.",
+        mermaidCode: `graph LR;
+            Head[Head Ptr] --> A[Node 1: Data|Next];
+            A --> B[Node 2: Data|Next];
+            B --> C[Node 3: Data|NULL];
+            style Head fill:#f9f,stroke:#333;` 
+    },
+    // 2. DBMS
+    {
+        id: 2, subject: "DBMS", topic: "ER Diagram", pdfFile: "DBMS_ER.pdf",
+        price: 299,
+        content: "Entity Relationship Diagram showing a simple Student-Course relationship.",
+        mermaidCode: `erDiagram
+            STUDENT ||--o{ ENROLLS : places
+            STUDENT { string name string id }
+            ENROLLS ||--|{ COURSE : contains
+            COURSE { string title int credits }`
+    },
+    // 3. Operating System
+    {
+        id: 3, subject: "Operating System", topic: "Process States", pdfFile: "OS_States.pdf",
+        price: 199,
+        content: "The life cycle of a process from creation to termination.",
+        mermaidCode: `stateDiagram-v2
+            [*] --> New
+            New --> Ready
+            Ready --> Running
+            Running --> Terminated
+            Running --> Waiting
+            Waiting --> Ready`
+    },
+    // 4. Web Development
+    {
+        id: 4, subject: "Web Dev", topic: "DOM Tree", pdfFile: "Web_DOM.pdf",
+        price: 199,
+        content: "The Document Object Model structure representation.",
+        mermaidCode: `graph TD;
+            Document --> HTML;
+            HTML --> Head;
+            HTML --> Body;
+            Head --> Title;
+            Body --> H1;
+            Body --> Div;`
+    },
+    // 5. Computer Networks (NEW)
+    {
+        id: 5, subject: "Networks", topic: "OSI Model", pdfFile: "Net_OSI.pdf",
+        price: 499,
+        content: "The Open Systems Interconnection model characterizes and standardizes the communication functions of a telecommunication system.",
+        mermaidCode: `graph TD
+            A[7. Application] --- B[6. Presentation]
+            B --- C[5. Session]
+            C --- D[4. Transport]
+            D --- E[3. Network]
+            E --- F[2. Data Link]
+            F --- G[1. Physical]
+            style A fill:#e1f5fe
+            style G fill:#fff3e0`
+    },
+    // 6. Discrete Mathematics (NEW)
+    {
+        id: 6, subject: "Mathematics", topic: "Graph Theory", pdfFile: "Math_Graph.pdf",
+        price: 199,
+        content: "Graphs are mathematical structures used to model pairwise relations between objects (Nodes and Edges).",
+        mermaidCode: `graph LR
+            A((1)) --- B((2))
+            B --- C((3))
+            C --- A
+            B --- D((4))
+            style A fill:#f9f9f9,stroke:#333,stroke-width:2px`
+    },
+    // 7. Python Programming (NEW)
+    {
+        id: 7, subject: "Python", topic: "Control Flow", pdfFile: "Py_Flow.pdf",
+        price: 299,
+        content: "Visualizing If-Else logic flow in Python programming.",
+        mermaidCode: `graph TD
+            Start([Start]) --> Cond{Is x > 5?}
+            Cond -- Yes --> Print[Print 'High']
+            Cond -- No --> Print2[Print 'Low']
+            Print --> End([End])
+            Print2 --> End`
+    },
+    // 8. Software Engineering (NEW)
+    {
+        id: 8, subject: "Software Eng", topic: "Waterfall Model", pdfFile: "SE_Waterfall.pdf",
+        price: 199,
+        content: "The Waterfall model is a breakdown of project activities into linear sequential phases.",
+        mermaidCode: `graph TD
+            A[Requirements] --> B[Design]
+            B --> C[Implementation]
+            C --> D[Verification]
+            D --> E[Maintenance]
+            style A fill:#d1c4e9`
+    },
+    // 9. Digital Electronics (NEW)
+    {
+        id: 9, subject: "Digital Elec", topic: "Logic Circuit", pdfFile: "DE_Logic.pdf",
+        price: 499,
+        content: "Representation of a simple Digital Logic flow.",
+        mermaidCode: `graph LR
+            A[Input A] --> AND{AND}
+            B[Input B] --> AND
+            AND --> OR{OR}
+            C[Input C] --> OR
+            OR --> Out[Output]
+            style AND fill:#ffccbc`
+    }
+];
+
+const videoResources = [
+    { title: "C++ Full Course", subject: "C++", id: "vLnPwxZdW4Y", channel: "freeCodeCamp" },
+    { title: "Java Full Course", subject: "Java", id: "eIrMbAQSU34", channel: "Edureka" },
+    { title: "Data Structures", subject: "DS", id: "RBSGKlAvoiM", channel: "FreeCodeCamp" },
+    { title: "Operating Systems", subject: "OS", id: "bkSWJJZNgf8", channel: "Gate Smashers" },
+    { title: "Python for Beginners", subject: "Python", id: "_uQrJ0TkZlc", channel: "Programming with Mosh" },
+    { title: "Discrete Math Logic", subject: "Math", id: "h8j4X_3L4xM", channel: "Neso Academy" },
+    { title: "Computer Networks", subject: "Networks", id: "IPvYjXCsTg8", channel: "Neso Academy" },
+    { title: "Software Engineering", subject: "SE", id: "4b1D1QFEel0", channel: "Simplilearn" }
+];
+
+/* SUBJECT LEARNING ROADMAPS */
+const subjectRoadmaps = {
+    "web-dev": {
+        title: "Full Stack Web Development",
+        mermaid: "graph TD; B[HTML/CSS] --> I[JS & DOM]; I --> A[React/Node];",
+        steps: [
+            { level: "Beginner", topics: [{ name: "HTML5 Basics", noteId: 4 }, { name: "CSS Selectors", noteId: 4 }] },
+            { level: "Intermediate", topics: [{ name: "JavaScript DOM", noteId: 4 }, { name: "Fetch API", noteId: null }] },
+            { level: "Advanced", topics: [{ name: "React Hooks", noteId: 4 }, { name: "Express.js", noteId: null }] }
+        ]
+    },
+    "ds": {
+        title: "Data Structures & Algorithms",
+        mermaid: "graph TD; B[Arrays & Searching] --> I[Stacks, Queues, LL]; I --> A[Trees, Graphs & DP];",
+        steps: [
+            { level: "Beginner", topics: [{ name: "Big O Notation", noteId: 1 }, { name: "Array Operations", noteId: 1 }] },
+            { level: "Intermediate", topics: [{ name: "Linked Lists", noteId: 1 }, { name: "Stacks & Queues", noteId: 1 }] },
+            { level: "Advanced", topics: [{ name: "Trees & BST", noteId: 1 }, { name: "Graph Algorithms", noteId: 1 }] }
+        ]
+    },
+    "os": {
+        title: "Operating Systems & DBMS",
+        mermaid: "graph TD; B[Kernel & SQL Basics] --> I[Scheduling & Normalization]; I --> A[Security & Transactions];",
+        steps: [
+            { level: "Beginner", topics: [{ name: "OS Types", noteId: 3 }, { name: "Basic SQL Commands", noteId: 2 }] },
+            { level: "Intermediate", topics: [{ name: "CPU Scheduling", noteId: 3 }, { name: "Normalization (1NF-3NF)", noteId: 2 }] },
+            { level: "Advanced", topics: [{ name: "Virtual Memory", noteId: 3 }, { name: "Concurrency Control", noteId: 2 }] }
+        ]
+    },
+    "python": {
+        title: "Python Programming",
+        mermaid: "graph TD; B[Basics & Syntax] --> I[OOPs & File IO]; I --> A[Data Science & APIs];",
+        steps: [
+            { level: "Beginner", topics: [{ name: "Variables & Loops", noteId: 7 }, { name: "Lists & Tuples", noteId: 7 }] },
+            { level: "Intermediate", topics: [{ name: "Classes & Objects", noteId: 7 }, { name: "Exception Handling", noteId: 7 }] },
+            { level: "Advanced", topics: [{ name: "Pandas & NumPy", noteId: null }, { name: "Django/Flask", noteId: null }] }
+        ]
+    },
+    "networks": {
+        title: "Computer Networks",
+        mermaid: "graph TD; B[Networking Models] --> I[Protocols & IP]; I --> A[Security & Routing];",
+        steps: [
+            { level: "Beginner", topics: [{ name: "OSI Model", noteId: 5 }, { name: "TCP/IP Suite", noteId: 5 }] },
+            { level: "Intermediate", topics: [{ name: "IPv4 Addressing", noteId: 5 }, { name: "Subnetting", noteId: 5 }] },
+            { level: "Advanced", topics: [{ name: "Network Security", noteId: 5 }, { name: "BGP & OSPF Routing", noteId: 5 }] }
+        ]
+    },
+    "math": {
+        title: "Mathematics (Discrete & Graph)",
+        mermaid: "graph TD; B[Sets & Logic] --> I[Relations & Induction]; I --> A[Graph Theory & Trees];",
+        steps: [
+            { level: "Beginner", topics: [{ name: "Set Theory", noteId: 6 }, { name: "Propositional Logic", noteId: 6 }] },
+            { level: "Intermediate", topics: [{ name: "Permutations", noteId: 6 }, { name: "Mathematical Induction", noteId: 6 }] },
+            { level: "Advanced", topics: [{ name: "Planar Graphs", noteId: 6 }, { name: "Tree Traversal", noteId: 6 }] }
+        ]
+    },
+    "software-eng": {
+        title: "Software Engineering",
+        mermaid: "graph TD; B[SDLC Models] --> I[Agile & Testing]; I --> A[DevOps & Patterns];",
+        steps: [
+            { level: "Beginner", topics: [{ name: "Waterfall Model", noteId: 8 }, { name: "SRS Documentation", noteId: 8 }] },
+            { level: "Intermediate", topics: [{ name: "Agile/Scrum", noteId: 8 }, { name: "White & Black Box Testing", noteId: 8 }] },
+            { level: "Advanced", topics: [{ name: "Design Patterns", noteId: 8 }, { name: "Software Metrics", noteId: 8 }] }
+        ]
+    },
+    "digital-elec": {
+        title: "Digital Electronics",
+        mermaid: "graph TD; B[Number Systems] --> I[Logic Gates & K-Maps]; I --> A[Sequential Circuits];",
+        steps: [
+            { level: "Beginner", topics: [{ name: "Binary/Hex Systems", noteId: 9 }, { name: "ASCII Code", noteId: 9 }] },
+            { level: "Intermediate", topics: [{ name: "AND/OR/NOT Gates", noteId: 9 }, { name: "K-Map Simplification", noteId: 9 }] },
+            { level: "Advanced", topics: [{ name: "Flip Flops", noteId: 9 }, { name: "Counters", noteId: 9 }] }
+        ]
+    }
+};
+
+/* ---------------- CORE FUNCTIONS ---------------- */
+
+function showPage(page, data = null) {
+    const content = document.getElementById("content");
+    content.innerHTML = '';
+    content.classList.remove("fade");
+    void content.offsetWidth; 
+    content.classList.add("fade");
+    document.getElementById('navbar').classList.remove('active');
+
+    switch(page) {
+        case 'home':
+            content.innerHTML = `
+                <div class="hero">
+                    <h2>Master BCA with Interactive Tools 🚀</h2>
+                    <p>Dynamic Diagrams • GPA Calculator • Curated Resources</p>
+                    <button onclick="showPage('notes')">Explore Interactive Notes</button>
+                    <button onclick="showPage('calculator')" style="background:transparent; border:2px solid white; color:white;">GPA Calc</button>
+                </div>
+                <h3>Explore Subjects & Learning Paths</h3>
+                <div class="grid">
+                    <div class="card" onclick="generateRoadmap('web-dev')"><h3>💻 Web Dev</h3><p>Full Stack, React, Node</p></div>
+                    <div class="card" onclick="generateRoadmap('ds')"><h3>🧠 Data Structures</h3><p>Visualized Algorithms</p></div>
+                    <div class="card" onclick="generateRoadmap('os')"><h3>⚙️ OS & DBMS</h3><p>Core CS Concepts</p></div>
+                    <div class="card" onclick="generateRoadmap('python')"><h3>🐍 Python</h3><p>Scripts & Automation</p></div>
+                    <div class="card" onclick="generateRoadmap('networks')"><h3>🌐 Networks</h3><p>OSI, TCP/IP, Security</p></div>
+                    <div class="card" onclick="generateRoadmap('math')"><h3>📐 Mathematics</h3><p>Discrete Math & Graph Theory</p></div>
+                    <div class="card" onclick="generateRoadmap('software-eng')"><h3>🏗️ Software Eng</h3><p>SDLC & Agile</p></div>
+                    <div class="card" onclick="generateRoadmap('digital-elec')"><h3>⚡ Digital Elec</h3><p>Logic Gates & Circuits</p></div>
+                </div>`;
+            break;
+
+        case 'notes':
+            content.innerHTML = `<h2>📚 Interactive Notes</h2><input type="text" placeholder="🔎 Search topics (e.g. OSI, Python)..." onkeyup="filterNotes(this.value)" style="margin-bottom:20px;"><div id="notes-grid" class="grid"></div>`;
+            renderNotes(notes);
+            break;
+
+        case 'favorites':
+            const favNotes = notes.filter(n => favorites.includes(n.id));
+            content.innerHTML = `<h2>❤️ My Saved Notes</h2><div id="notes-grid" class="grid"></div>`;
+            if(favNotes.length === 0) content.innerHTML += `<p>No favorites yet. Click the heart on a note to save it!</p>`;
+            renderNotes(favNotes);
+            break;
+
+        case 'profile':
+            if(!isLoggedIn) {
+                content.innerHTML = `<div class="card" style="max-width:500px; margin:50px auto; text-align:center;"><h2>Please Login First</h2><p>Login to view your profile and purchase history.</p><button class="primary-btn" onclick="showPage('login')">Go to Login</button></div>`;
+                break;
+            }
+            const history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+            const userEmail = localStorage.getItem('userEmail') || "Guest Student";
+            
+            content.innerHTML = `
+                <div class="profile-container fade">
+                    <div class="card profile-header" style="margin-bottom:30px;">
+                        <div class="avatar">🎓</div>
+                        <h2 style="margin:10px 0;">${userEmail.split('@')[0]}</h2>
+                        <p style="margin:5px 0; opacity:0.9;">${userEmail}</p>
+                        <div class="stats-row">
+                            <div class="stat-box"><strong>${userStats.xp}</strong><br><small>XP Points</small></div>
+                            <div class="stat-box"><strong>${history.length}</strong><br><small>Notes Owned</small></div>
+                        </div>
+                    </div>
+
+                    <h3>💳 Transaction History</h3>
+                    <div class="card">
+                        ${history.length === 0 ? 
+                            `<p style="color:var(--text-sub); text-align:center;">No purchases yet. <a href="#" onclick="showPage('shop')" style="color:var(--secondary);">Start shopping now!</a></p>` : 
+                            `<div style="overflow-x:auto;">
+                                <table style="width:100%; border-collapse:collapse; text-align:left;">
+                                    <thead>
+                                        <tr style="border-bottom:2px solid var(--accent);">
+                                            <th>Date</th>
+                                            <th>Item</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${history.map(tx => `
+                                            <tr>
+                                                <td>${tx.date}</td>
+                                                <td><strong>${tx.item}</strong></td>
+                                                <td>₹${tx.price}</td>
+                                                <td><span style="color:var(--success); font-weight:bold;">● Success</span></td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>`
+                        }
+                    </div>
+                </div>
+            `;
+            break;
+            const note = notes.find(n => n.id === data);
+            const isFav = favorites.includes(note.id) ? 'active' : '';
+            content.innerHTML = `
+                <div class="card" style="max-width:900px; margin:0 auto; text-align:left;">
+                    <button onclick="showPage('notes')" style="float:right;">← Back</button>
+                    <h2 style="color:var(--primary)">${note.topic}</h2>
+                    <span style="background:var(--secondary); color:white; padding:4px 8px; border-radius:4px; font-size:0.8em;">${note.subject}</span>
+                    <hr style="opacity:0.1; margin:20px 0;">
+                    <p>${note.content}</p>
+                    
+                    <div class="diagram-box">
+                        <strong>Interactive Visualization</strong><br><br>
+                        <div class="mermaid">${note.mermaidCode}</div>
+                    </div>
+
+                    <button class="pdf-btn" onclick="alert('Downloading...')">📄 Download PDF</button>
+                    <div class="fav-icon ${isFav}" onclick="toggleFav(${note.id}, this)" style="position:relative; margin-top:15px; font-size:2em;">♥</div>
+                </div>`;
+            
+            // Execute Mermaid to render the specific diagram
+            mermaid.run({
+                nodes: document.querySelectorAll('.mermaid')
+            });
+            break;
+
+        case 'calculator':
+            content.innerHTML = `
+                <div class="card" style="max-width:500px; margin:0 auto;">
+                    <h2>🧮 SGPA Calculator</h2>
+                    <p style="font-size:0.9em; color:var(--text-sub);">Calculate your Semester Grade Point Average</p>
+                    <div id="calc-rows">
+                        <div class="calc-row"><input type="text" value="Subject 1" readonly><select class="grade"><option value="10">O (10)</option><option value="9">A+ (9)</option><option value="8">A (8)</option><option value="7">B+ (7)</option><option value="6">B (6)</option></select><select class="credit"><option value="4">4 Credits</option><option value="3">3 Credits</option><option value="2">2 Credits</option></select></div>
+                        <div class="calc-row"><input type="text" value="Subject 2" readonly><select class="grade"><option value="9">A+ (9)</option></select><select class="credit"><option value="4">4 Credits</option></select></div>
+                        <div class="calc-row"><input type="text" value="Subject 3" readonly><select class="grade"><option value="8">A (8)</option></select><select class="credit"><option value="3">3 Credits</option></select></div>
+                    </div>
+                    <button class="primary-btn" onclick="addSubjectRow()">+ Add Subject</button>
+                    <button class="primary-btn" style="margin-top:10px; background:var(--accent); border:none;" onclick="calculateSGPA()">Calculate Score</button>
+                    <div id="sgpa-result" class="result-box" style="display:none;"></div>
+                </div>`;
+            break;
+
+        case 'videos':
+            content.innerHTML = `<h2>🎥 Curated Tutorials</h2><div class="grid">${videoResources.map(v => `
+                <div class="card"><img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" class="video-thumb"><h3>${v.title}</h3><a href="https://youtu.be/${v.id}" target="_blank" class="watch-btn">Watch</a></div>
+            `).join('')}</div>`;
+            break;
+
+        case 'shop':
+            content.innerHTML = `
+                <h2>🛒 Premium Study Material</h2>
+                <p>Get lifetime access to premium PDF notes and solved papers.</p>
+                <div class="grid">
+                    ${notes.map(n => `
+                        <div class="card">
+                            <span style="font-size:0.8em; color:var(--text-sub)">${n.subject}</span>
+                            <h3>${n.topic} Full Bundle</h3>
+                            <div class="price-tag">₹${n.price || 199}</div>
+                            <ul style="font-size:0.8em; text-align:left; padding-left:20px;">
+                                <li>Step-by-step Explanations</li>
+                                <li>Solved Previous Year Questions</li>
+                                <li>Handwritten Diagrams</li>
+                            </ul>
+                            <button class="buy-btn" onclick="processPurchase('${n.topic}', ${n.price || 199})">Buy Now</button>
+                        </div>
+                    `).join('')}
+                </div>`;
+            break;
+
+        case 'login':
+            content.innerHTML = `
+                <div class="login-container">
+                    <h2>🔑 Gmail Login</h2>
+                    <p style="color:var(--text-sub); font-size:0.9em;">Sign in with your Gmail account</p>
+                    <input id="gmail" type="email" placeholder="Enter your Gmail (e.g., name@gmail.com)">
+                    <input id="password" type="password" placeholder="Enter password">
+                    <button type="button" class="primary-btn" onclick="login()">Login with Gmail</button>
+                    <p style="color:var(--text-sub); font-size:0.8em; margin-top:15px;"><strong>Demo:</strong> Any @gmail.com email + any password (min 6 chars)</p>
+                </div>`;
+            break;
+    }
+}
+
+/* ---------------- HELPERS ---------------- */
+
+function renderNotes(list) {
+    document.getElementById('notes-grid').innerHTML = list.map(n => {
+        const isFav = favorites.includes(n.id) ? 'active' : '';
+        return `<div class="card note-card" onclick="showPage('noteDetail', ${n.id})">
+            <div class="fav-icon ${isFav}" onclick="event.stopPropagation(); toggleFav(${n.id}, this)">♥</div>
+            <h3>${n.topic}</h3><p style="color:var(--secondary)">${n.subject}</p>
+        </div>`;
+    }).join('');
+}
+
+function toggleFav(id, btn) {
+    if(favorites.includes(id)) {
+        favorites = favorites.filter(fid => fid !== id);
+        btn.classList.remove('active');
+    } else {
+        favorites.push(id);
+        btn.classList.add('active');
+        alert("Added to Saved Notes ❤️");
+    }
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+function login() {
+    const gmailField = document.getElementById('gmail').value.trim();
+    const passwordField = document.getElementById('password').value;
+
+    // Validate Gmail format
+    const gmailRegex = /^[a-zA-Z0-9._-]+@gmail\.com$/;
+    
+    if(!gmailRegex.test(gmailField)) {
+        alert('❌ Please enter a valid Gmail address (e.g., name@gmail.com)');
+        return;
+    }
+    
+    if(passwordField.length < 6) {
+        alert('❌ Password must be at least 6 characters long.');
+        return;
+    }
+    
+    // Login successful
+    isLoggedIn = true; 
+    localStorage.setItem('isLoggedIn', 'true'); 
+    localStorage.setItem('userEmail', gmailField); // Store email
+    updateLoginLink(); 
+    alert(`✅ Login Successful! Welcome, ${gmailField.split('@')[0]}`);
+    showPage('home'); 
+}
+
+function updateLoginLink() { document.getElementById('login-link').innerText = isLoggedIn ? 'Logout' : 'Login'; }
+
+function handleLoginLogout() {
+    if(isLoggedIn) { isLoggedIn = false; localStorage.removeItem('isLoggedIn'); localStorage.removeItem('userEmail'); updateLoginLink(); showPage('home'); }
+    else showPage('login');
+}
+
+function toggleMenu() { document.getElementById('navbar').classList.toggle('active'); }
+
+function toggleTheme(save=true) {
+    document.body.classList.toggle('dark-mode');
+    if(save) localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+
+function filterNotes(q) {
+    const filtered = notes.filter(n => n.topic.toLowerCase().includes(q.toLowerCase()));
+    renderNotes(filtered);
+}
+
+/* ---------------- CALCULATOR LOGIC ---------------- */
+function addSubjectRow() {
+    const div = document.createElement('div'); div.className = 'calc-row';
+    div.innerHTML = `<input type="text" placeholder="Subject Name"><select class="grade"><option value="10">O (10)</option><option value="9">A+ (9)</option><option value="8">A (8)</option><option value="7">B+ (7)</option><option value="6">B (6)</option></select><select class="credit"><option value="4">4 Credits</option><option value="3">3 Credits</option><option value="2">2 Credits</option></select>`;
+    document.getElementById('calc-rows').appendChild(div);
+}
+
+function calculateSGPA() {
+    let totalCredits = 0, totalPoints = 0;
+    document.querySelectorAll('.calc-row').forEach(row => {
+        const g = parseInt(row.querySelector('.grade').value);
+        const c = parseInt(row.querySelector('.credit').value);
+        if(!isNaN(g) && !isNaN(c)){
+            totalPoints += (g * c);
+            totalCredits += c;
+        }
+    });
+    
+    if(totalCredits === 0) {
+        alert("Please add subjects with valid credits.");
+        return;
+    }
+
+    const sgpa = (totalPoints / totalCredits).toFixed(2);
+    const res = document.getElementById('sgpa-result');
+    res.style.display = 'block';
+    
+    // Adjusted Color logic for the new Blue Theme
+    let color = sgpa >= 8 ? 'var(--success)' : (sgpa >= 6 ? 'var(--secondary)' : 'var(--error)');
+    res.style.background = color;
+    
+    res.innerHTML = `Your SGPA: <strong>${sgpa}</strong>`;
+}
+
+/* NOTIFICATION TOAST SYSTEM */
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--primary);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 2000;
+        animation: slideInUp 0.3s ease;
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'slideInDown 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+/* PAYMENT & SHOP FUNCTIONS */
+let currentProduct = "";
+
+function processPurchase(item, price) {
+    if(!isLoggedIn) {
+        showToast("🔐 Please login to purchase!");
+        showPage('login');
+        return;
+    }
+    
+    // Instantly process payment
+    showToast("💳 Processing payment...");
+    
+    setTimeout(() => {
+        // Add to purchase history
+        let history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+        const newTransaction = {
+            item: item,
+            price: price,
+            date: new Date().toLocaleDateString(),
+            id: 'TXN' + Math.floor(Math.random() * 1000000)
+        };
+        history.push(newTransaction);
+        localStorage.setItem('purchaseHistory', JSON.stringify(history));
+        
+        // Award XP
+        userStats.xp = (userStats.xp || 0) + 50;
+        localStorage.setItem('userStats', JSON.stringify(userStats));
+        
+        // Show success and redirect
+        showToast("✅ Payment Successful! +50 XP");
+        showPage('profile');
+    }, 800);
+}
+
+function showUPIScreen() {
+    document.getElementById('methodSelection').style.display = 'none';
+    document.getElementById('qrScreen').style.display = 'block';
+}
+
+function showCardScreen() {
+    document.getElementById('methodSelection').style.display = 'none';
+    document.getElementById('cardScreen').style.display = 'block';
+}
+
+function showNetBanking() {
+    document.getElementById('methodSelection').style.display = 'none';
+    document.getElementById('netBankingScreen').style.display = 'block';
+}
+
+function closePayment() {
+    document.getElementById('paymentModal').style.display = 'none';
+    document.getElementById('methodSelection').style.display = 'block';
+    document.getElementById('qrScreen').style.display = 'none';
+    document.getElementById('cardScreen').style.display = 'none';
+    document.getElementById('netBankingScreen').style.display = 'none';
+}
+
+function openPayment(itemName, price) {
+    document.getElementById('paymentModal').style.display = 'flex';
+    document.getElementById('paymentTitle').innerText = `Buying: ${itemName}`;
+    document.getElementById('paymentAmount').innerText = `Total: ₹${price}`;
+    // Store current item for the success logic
+    window.currentPurchase = { item: itemName, price: price };
+}
+
+function finishPayment() {
+    const btn = event.target;
+    btn.innerText = "⌛ Processing...";
+    btn.disabled = true;
+
+    // Simulate a network delay (2 seconds)
+    setTimeout(() => {
+        const history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+        const newTx = {
+            date: new Date().toLocaleDateString(),
+            item: window.currentPurchase.item,
+            price: window.currentPurchase.price,
+            status: "Success"
+        };
+        
+        history.push(newTx);
+        localStorage.setItem('purchaseHistory', JSON.stringify(history));
+        
+        // Grant XP for the purchase
+        userStats.xp += 50;
+        localStorage.setItem('userStats', JSON.stringify(userStats));
+
+        alert("✅ Payment Successful! Note added to your account.");
+        closePayment();
+        showPage('profile');
+    }, 2000);
+}
+
+/* XP SYSTEM */
+function updateXP(points) {
+    userStats.xp = (userStats.xp || 0) + points;
+    localStorage.setItem('userStats', JSON.stringify(userStats));
+}
+
+/* LEARNING ROADMAP FUNCTION */
+function generateRoadmap(subjectKey) {
+    const data = subjectRoadmaps[subjectKey];
+    if (!data) return;
+
+    const content = document.getElementById("content");
+    content.innerHTML = `
+        <div class="card fade" style="max-width:900px; margin:0 auto; padding:40px;">
+            <button onclick="showPage('home')" style="float:left; background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">← Home</button>
+            <h2 style="margin-top:50px; color:var(--primary); text-align:center;">${data.title} Learning Path</h2>
+            
+            <div class="diagram-box" style="background:#fff; border-radius:15px; padding:20px; margin:30px 0; border:1px solid #eee;">
+                <div class="mermaid">${data.mermaid}</div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
+                ${data.steps.map(step => `
+                    <div style="background:var(--bg); border-top:4px solid var(--accent); padding:20px; border-radius:10px; box-shadow:var(--shadow);">
+                        <h4 style="color:var(--accent); margin-top:0;">${step.level}</h4>
+                        <ul style="padding-left:18px; margin:0; font-size:0.9em;">
+                            ${step.topics.map(t => {
+                                if(t.noteId) {
+                                    return `<li style="margin-bottom:8px; cursor:pointer; color:var(--secondary);" onclick="showPage('noteDetail', ${t.noteId})">${t.name} 📖</li>`;
+                                } else {
+                                    return `<li style="margin-bottom:8px;">${t.name}</li>`;
+                                }
+                            }).join('')}
+                        </ul>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div style="text-align:center; margin-top:40px;">
+                <button class="primary-btn" onclick="showPage('notes')">Access Study Material</button>
+            </div>
+        </div>
+    `;
+
+    mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+    window.scrollTo(0, 0);
+}
+
+/* GLOBAL SEARCH FUNCTION */
+function openGlobalSearch() {
+    const query = prompt("🔎 Search for any Topic, Note, or Roadmap:");
+    if (!query) return;
+
+    const lowerQuery = query.toLowerCase();
+    
+    // Search in Notes
+    const foundNote = notes.find(n => 
+        n.topic.toLowerCase().includes(lowerQuery) || 
+        n.subject.toLowerCase().includes(lowerQuery)
+    );
+    
+    // Search in Roadmaps
+    const foundRoadmap = Object.keys(subjectRoadmaps).find(key => 
+        subjectRoadmaps[key].title.toLowerCase().includes(lowerQuery)
+    );
+
+    if (foundNote) {
+        showPage('noteDetail', foundNote.id);
+    } else if (foundRoadmap) {
+        generateRoadmap(foundRoadmap);
+    } else {
+        alert("❌ No results found for: " + query);
+    }
+}
+</script>
+</body>
+</html>
